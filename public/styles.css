@@ -61,7 +61,8 @@ a:visited:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;}
-  .main-nav__login {
+  .main-nav__login,
+  .main-nav__logout {
     color: #5995DA;}
   .main-nav__logo img {
     width: 90%;
@@ -93,7 +94,8 @@ a:visited:hover {
       position: relative;
       left: -1px;
       top: -1px;
-      opacity: .50;}
+      opacity: .50;
+      cursor: pointer;}
 
 .about {
   border-bottom: 1px solid #EAEDF0;
@@ -282,6 +284,10 @@ a:visited:hover {
         max-width: 300px;
       }
 
+
+.hidden {
+  display: none;
+}
 
 @media only screen and (min-width: 500px) {
   .main-button__wrapper {
