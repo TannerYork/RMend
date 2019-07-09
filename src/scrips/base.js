@@ -154,6 +154,8 @@ export default class Elements {
         this.adminPage.style.display = 'none';
         this.settingsPage.style.display = 'none';
         this.verifiedUserPage.style.display = 'flex';
+        this.sidebarReports.style.display = 'flex';
+        this.sidebarReport.style.display = 'flex';
     }
 
     // Initilize report form
@@ -280,7 +282,7 @@ export default class Elements {
         this.sidebarUsers.style.display = 'flex';
         this.sidebarPendingUsers.style.display = 'flex';
         this.sidebarLogin.style.display = 'none';
-        this.renderReportsList();
+        this.renderModeratorReportsList();
     }
 
     // Remove listeners for list and render the setting form
@@ -292,7 +294,7 @@ export default class Elements {
     }
 
     // Remove Listeners for other list and setup report list listener to render report list items
-    async renderReportsList() {
+    async renderModeratorReportsList() {
         this.verifiedUserPage.style.display = 'none';
         this.settingsPage.style.display = 'none';
         this.adminPage.style.display = 'flex';
@@ -305,14 +307,33 @@ export default class Elements {
                 var numberOfReports = 0;
                 await snapshot.docChanges().forEach(async (change) => {
                     numberOfReports += 1;
-                    await this.checkChangeType(change, this.createReport, numberOfReports);
+                    await this.checkChangeType(change, this.createModeratorReport, numberOfReports);
+                });
+            }, (error) => { console.log(error); });
+        this.listeners.push(listener);
+    }
+
+    async renderVerifiedUserReportsList() {
+        this.verifiedUserPage.style.display = 'none';
+        this.settingsPage.style.display = 'none';
+        this.adminPage.style.display = 'flex';
+        this.reportsList.style.display = 'flex';
+        this.reportsList.innerHTML = '';
+
+        await this.listeners.forEach((listener) => listener());
+        const listener = await firebase.firestore().collection("reports")
+            .onSnapshot(async (snapshot) => {
+                var numberOfReports = 0;
+                await snapshot.docChanges().forEach(async (change) => {
+                    numberOfReports += 1;
+                    await this.checkChangeType(change, this.createVerifiedUserReport, numberOfReports);
                 });
             }, (error) => { console.log(error); });
         this.listeners.push(listener);
     }
 
     // Create a report list item to be displayed
-    createReport(data, id) { return `
+    createModeratorReport(data, id) { return `
             <div class="report-item js-report-item ${id}" data-id="${id}">
                 <figure class="report-item__figure">
                 <img class="report-item__img" src="${data.imageUrl || "images/Spin-1s-80px.svg"}"/>
@@ -332,6 +353,21 @@ export default class Elements {
                     <span class="checkmark"></span>
                 </label>
             </div>`};
+
+    createVerifiedUserReport(data, id) { return `
+    <div class="report-item js-report-item ${id}" data-id="${id}">
+        <figure class="report-item__figure">
+        <img class="report-item__img" src="${data.imageUrl || "images/Spin-1s-80px.svg"}"/>
+        </figure>
+        <div class="report-item__data disable-scrollbars">
+        <h4><span class= report-item__subheader>Sender:</span> ${data.sender}</h4>
+        <p><span class= report-item__subheader>Date:</span> ${data.timestamp}</p>
+        <p><span class= report-item__subheader>Road Name:</span> ${data.roadName}</p>
+        <p><span class= report-item__subheader>Description:</span> ${data.details}</p>
+        <p><span class= report-item__subheader>Nearest Street:</span> ${data.nearestStreet}</p>
+        <p><span class= report-item__subheader>Magistrial District:</span> ${data.magistrialDistrict}</p>
+        </div>
+    </div>`};
 
     toggleBorder(id) {
         document.querySelector(`.${id}`).classList.toggle("priority-border");
@@ -406,10 +442,15 @@ export default class Elements {
     // Check changes for list listeners above and render elements as needed
      checkChangeType(change, cardCreator) {
         if (change.type === "added") {
-            if (cardCreator == this.createReport && change.doc.data().priority == true) {
+            if (cardCreator == this.createModeratorReport && change.doc.data().priority == true) {
                 this.reportsList.insertAdjacentHTML('afterbegin', cardCreator(change.doc.data(), change.doc.id));
                 this.toggleBorder(change.doc.id);
-            } else if (cardCreator == this.createReport) {
+            } else if (cardCreator == this.createModeratorReport) {
+                this.reportsList.insertAdjacentHTML('beforeend', cardCreator(change.doc.data(), change.doc.id));
+            } else if (cardCreator == this.createVerifiedUserReport && change.doc.data().priority == true) {
+                this.reportsList.insertAdjacentHTML('afterbegin', cardCreator(change.doc.data(), change.doc.id));
+                this.toggleBorder(change.doc.id);
+            } else if (cardCreator == this.createVerifiedUserReport) {
                 this.reportsList.insertAdjacentHTML('beforeend', cardCreator(change.doc.data(), change.doc.id));
             } else {
                 this.reportsList.insertAdjacentHTML('beforeend', cardCreator(change.doc.data()));
@@ -429,7 +470,7 @@ export default class Elements {
         if (change.type === "removed") {
             if (this.reportsList.hasChildNodes()) {
                 var array = Array.from(this.reportsList.children);
-                if (cardCreator == this.createReport) {
+                if (cardCreator == this.createModeratorReport) {
                     array.forEach((element, index) => {
                         if (element.dataset && element.dataset.id === `${change.doc.data().id}`) {
                             this.reportsList.removeChild(this.reportsList.children[index]);

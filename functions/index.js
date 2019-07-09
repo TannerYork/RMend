@@ -74,6 +74,14 @@ function cleanupTokens(response, tokens) {
     return Promise.all(tokensDelete);
    }
 
+   exports.checkModeratorToken = functions.https.onCall((data, context) => {
+       if (context.auth.token.moderator == true) {
+        return {result: true};
+       } else {
+           return {result: false};
+       }
+});
+
  exports.savePedningUser = functions.auth.user().onCreate((user) => {
     return admin.firestore().collection('pendingUsers').doc(user.uid).set({
         displayName: user.displayName,

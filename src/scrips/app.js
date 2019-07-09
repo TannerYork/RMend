@@ -42,10 +42,17 @@ if ('serviceWorker' in navigator) {
          */
         
          // Checks for sidebar admin buttons interaction and loads the correct page
-        function checkForListChange(event) {
+       async function checkForListChange(event) {
             const btn = event.target.closest('.sidebar__list-item');
             if (btn && btn.textContent == 'View Reports') {
-                elements.renderReportsList();
+                const userIDToken = await firebase.auth().currentUser.getIdTokenResult(true);
+                if (userIDToken.claims && userIDToken.claims.moderator == true) {
+                    console.log("moderator");
+                    elements.renderModeratorReportsList();
+                } else {
+                    console.log("Verified User");
+                    elements.renderVerifiedUserReportsList();
+                }
             } else if (btn && btn.textContent == 'Users') { 
                 elements.renderUsersList();
             } else if (btn && btn.textContent == 'Pending Users') { 
@@ -176,16 +183,17 @@ if ('serviceWorker' in navigator) {
             const userStatus = await elements.loadReportsPageInnerHTML(userIDToken);
             if (userStatus == 'moderator') {
                 console.log("Moderatore");
-                elements.renderReportsList();
+                elements.renderModeratorReportsList();
                 /**
                  * Currently all admin listeners are stated above due to the fact that on 
                  * mobile devices function inside double nested starting if staments do not 
-                 * run at all. If you know a solution, please contact Tanner W York.
+                 * run at all. If you know a solution, please contact Tanner W. York.
                 */
             } else if (userStatus == 'verifiedUser') {
                 // If reportform DOM is loaded, initilized the report form listener
                 var reportForm = document.querySelector('.js-issue-form');
                 if (reportForm) elements.initilizeReportDataForm(firestore.saveReport);
+
             } else if (userStatus == 'user') {
                 elements.renderUserView();
             }

@@ -19,6 +19,17 @@ export function signIn() {
   firebase.auth().signInWithRedirect(provider); 
 }
 
+export function isModerator() {
+  const checkModerator = firebase.functions().httpsCallable('checkModeratorToken');
+  return checkModerator({email: email}).then((results) => {
+    if (results && results.data.error !== undefined) {
+      console.log(results.data);
+    } else {
+      return results.data.result;
+    }
+  });
+}
+
 export function setupAuthUi() {
         var ui = new firebaseui.auth.AuthUI(firebase.auth());
         var uiConfig = {
@@ -230,6 +241,7 @@ export function getReport(id) {
   });
 }
 
+//Allow only moderators to change priority
 export function updatePriority(id, value) {
   firebase.firestore().collection('reports').doc(id).update({priority: value}).then(() => {
   }).catch((err) => {
