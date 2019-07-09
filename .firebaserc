@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "bc-road-department-database"
+    "default": "bc-road-department-database",
+    "staging": "bc-road-department-database",
+    "single": "r-mend"
   }
 }

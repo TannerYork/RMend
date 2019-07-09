@@ -3,100 +3,304 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8"/>
-    <title>RMend: Road Problem-Solution Organizer</title>
-    <link rel="stylesheet" href="styles.css"/>
+    <title>R.Mend</title>
+    <link rel="stylesheet" href="/styles/Main.css"/>
+    <link rel="stylesheet" href="/styles/Print.css" type="text/css" media="print">
+    <link rel="apple-touch-icon" sizes="128x128" href="images/BC-Road-app-150x150.png">
 
     <!-- Firebase Initialization -->
-    <script src="/__/firebase/5.9.3/firebase-app.js"></script>
-    <script src="/__/firebase/5.9.3/firebase-auth.js"></script>
-    <script src="/__/firebase/5.9.3/firebase-messaging.js"></script>
-    <script src="/__/firebase/5.9.3/firebase-storage.js"></script>
+    <script src="/__/firebase/6.0.2/firebase-app.js"></script>
+    <script src="/__/firebase/6.0.2/firebase-auth.js"></script>
+    <script src="/__/firebase/6.0.2/firebase-firestore.js"></script>
+    <script src="/__/firebase/6.0.2/firebase-messaging.js"></script>
+    <script src="/__/firebase/6.0.2/firebase-storage.js"></script>
+    <script src="/__/firebase/6.0.2/firebase-functions.js"></script>
     <script src="/__/firebase/init.js"></script>
 
+    <!-- Firebase Auth UI -->
+    <script src="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.css" />
+
+    <!-- App Manifest Inialization -->
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="BCRoads">
+    <meta name="apple-mobile-web-app-title" content="BCRoads">
+    <meta name="theme-color" content="#F9FAFB">
+    <meta name="msapplication-navbutton-color" content="#F9FAFB">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-starturl" content="/index.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" type="image/svg" sizes="512x512" href="/images/RMend-icon512x512.png">
+    <link rel="apple-touch-icon" type="image/svg" sizes="512x512" href="/images/RMend-icon512x512.png">
   </head>
 
   <body>
+    <div class="layover-container no-print">
+    </div>
 
-    <nav class="main-nav">
-      <div class="main-nav__logo">
-        <img class="main-nav__logo-img" src="images/logo.svg"/>
-      </div>
-      <div>
-        <a class="main-nav__login">Login</a>
-        <a hidden class="main-nav__logout">LogOut</a>
-      </div>
-    </nav>
+    <!-- Main navigation bar -->
+        <nav class="main-nav no-print">
+            <div class="main-nav__logo">
+              <img class="main-nav__logo-img" src="images/R.Mend-title.svg"/>
+            </div>
+          </nav>
 
-    <div class="page">
+    <!-- Main sidebar -->
+          <div class="container no-print">
+              <aside class="sidebar">
+                  <div class="sidebar__hamburger">
+                    <div class="thick"></div>
+                    <div class="thick"></div>
+                    <div class="thick"></div>
+                  </div>
+                  <div class="current-user__info" style="display: none">
+                    <div class="current-user__img" style="background-image: images/profile_image_dummy"></div>
+                    <h4 class="current-user__name">User Name</h4>
+                  </div>
+                  <ul class="sidebar__list">
+                    <li class="sidebar__list-item reports" style="display: none"><a>View Reports</a></li>
+                    <li class="sidebar__list-item report-issue" style="display: none"><a>Report a Problem</a></li>
+                    <li class="sidebar__list-item user-settings" style="display: none"><a>Notifications</a></li>
+                    <li class="sidebar__list-item users" style="display: none"><a>Users</a></li>
+                    <li class="sidebar__list-item pendingUsers" style="display: none"><a>Pending Users</a></li>
+                    <li class="sidebar__list-item sidebar__login" style="display: none"><a>Login</a></li>
+                    <li class="sidebar__list-item sidebar__logout"><a>LogOut</a></li>
+                  </ul>
+               </aside>
+          </div>
+
+  <!-- Main page of the app, used to contain most if the DOM elements -->
+    <main class="page no-print">
 
         <div class="main-buttons">
-          <div class="main-button">
-            <div class="main-button__wrapper">
-              <img class="main-button__img" src="images/logo__icon.svg" alt="LOGIN"/>
+            <div class="main-button">
+              <img class="main-button__img" src="images/R.Mend-logo-orange.png" alt="LOGIN"/>
             </div>
-          </div>
+        </div>
+
+      <!-- Login Page -->
+        <div class="login-page">
+          <div class="firebaseui-auth-container"></div>
         </div>
 
 
-        <!-- <div class="main-container">
-            <div class="sub-container">
-              //...
-            </div>
-          </div> -->
-    </div>
+      <!-- Users Page (Hidden by default) -->
+        <div class="main-container" style="display: none">
 
-        <footer>
-          <div class="about">
-            <div class="about__wrapper">
+                <!-- Verified User Report Page -->
+                <div class="verified-user-page sub-container disable-scrollbars" style="display: none">
+                    <header class="form-header">
+                      <h1>Report a Problem</h1>
+                      <p><em>If this is an emergency please call 911</em></p>
+                    </header>
+                    <form class="issue-form js-issue-form">
 
-              <div class="about__header">
-                <div class="about__rule-before"></div>
-                <img class="about__logo" src="images/logo__icon.svg" alt="RMend">
-                <div class="about__rule-after"></div>
-              </div>
+                    <div class="js-form-img-display"></div>
 
-              <div class="about__content">
-                <p class="about__description">
-                  <em>RMend</em> is a web app created for the Barren County Road Department so that they can have a easy way to keep track of their local communities road issuses. If you'd like to get in touch about creating this for your own organization contact BC Skills.
-                </p>
-              </div>
+                    <div class="form-row form-row-photo">
+                        <label class="photo-label" for="issue-photo">
+                        <span>Photo</span>
+                        <input type="file" accept="image/*" name="issue-photo" id="issue-photo" class="js-issue-photo" required/>
+                        </label>
+                    </div>
 
-              <div class="about__mailing-list">
-                <!-- TODO: Talk to Mr. Browning about connecting sight to BCS Skills -->
-              </div>
+                    <div class="form-row">
+                        <label for="issue-roadName">Road Name</label>
+                        <input type="text" name="issue-roadName" id="issue-roadName" class="js-issue-roadName" placeholder="Required" required/>
+                    </div>
 
+                    <div class="form-row">
+                      <label for="issue-details">Description</label>
+                      <input type="text" name="issue-details" id="issue-details" class="js-issue-details" placeholder="Required" required/>
+                    </div>
+
+                    <div class="form-row">
+                      <label for="issue-nearestStreet">Nearest Street Address</label>
+                      <input type="text" name="issue-nearestStreet" id="issue-nearestStreet" class="js-issue-nearestStreet"/>
+                    </div>
+
+                    <div class='form-row'>
+                        <label for='issue-magistrialDistrict'>Magisterial District</label>
+                        <textarea id='issue-magistrialDistrict' class="js-issue-magistrialDistrict"></textarea>
+                    </div>
+
+
+                      <fieldset class='legacy-form-row radio' required>
+                        <legend>Is this a high priority?</legend>
+                        <input id='priority-type-1'
+                               class='js-issue-priority-input-true'
+                               name='priority-type'
+                               type='radio'
+                               value='true' />
+                        <label for='priority-type-1' class='radio-label'>Yes</label>
+                        <input id='priority-type-2'
+                               class='js-issue-priority-input-false'
+                               name='priority-type'
+                               type='radio'
+                               value='false'
+                               checked/>
+                        <label for='priority-type-2' class='radio-label'>No</label>
+                      </fieldset>
+
+
+                    <div class="form-row">
+                        <button class="form-submit class="js-issue-submit"">Submit</button>
+                    </div>
+                    </form>
+                  </div>
+
+                  <!-- Moderated User Page -->
+                  <div class="moderated-user-page sub-container disable-scrollbars" style="display: none">
+                     <!-- Reports List -->
+                      <scroll-container class="reports-list disable-scrollbars" style="display: none">
+                          <!-- Reports -->
+                          <div class="issue-form-header" style="display: none">
+                              <h1>No Reports</h1>
+                              <p>There are currently no reports submitted.</p>
+                          </div>
+
+                          <!-- Verified Users -->
+                          <div class="issue-form-header" style="display: none">
+                              <h1>No Users</h1>
+                              <p>Currently, there are no verified users.</p>
+                          </div>
+
+                          <!-- Pennding Users -->
+                          <div class="issue-form-header" style="display: none">
+                              <h1>No Pending Users</h1>
+                              <p>Currently, there are no unverifed users.</p>
+                          </div>
+                      </scroll-container>
+                  </div>
+
+                  <div class="unverifed-user-page sub-container disable-scrollbars" style="display: none">
+                    <div class="issue-form-header">
+                      <h1>Account is not Verified</h1>
+                      <p>Please wait untill a Moderator verifies your account.</p>
+                    </div>
+                  </div>
+
+                  <div class="settings-page sub-container disable-scrollbars" style="display: none">
+                      <header class="form-header">
+                          <h1>Settings</h1>
+                          <p><em>Make sure to hit save before leaving this page.</em></p>
+                        </header>
+                        <form class="settings-form js-settings-form">
+                            <fieldset class='legacy-form-row' required>
+                                <legend>Notiffications</legend>
+                                <input id='notiffication-type-1'
+                                       class='js-notiffication-input true'
+                                       name='notiffication-type'
+                                       type='radio'
+                                       value='true' />
+                                <label for='notiffication-type-1' class='radio-label'>Yes</label>
+                                <input id='notiffication-type-2'
+                                       class='js-notiffication-input false'
+                                       name='notiffication-type'
+                                       type='radio'
+                                       value='false'/>
+                                <label for='notiffication-type-2' class='radio-label'>No</label>
+                              </fieldset>
+                              <div class="form-row">
+                                  <button class="form-submit js-settings-save">Save</button>
+                              </div>
+                        </form>
+                  </div>
+
+        </div>
+    </main>
+
+  <!-- Footer for page -->
+    <footer class="no-print">
+    <!-- About setion of footer -->
+      <div class="about">
+        <div class="about__wrapper">
+
+          <div class="about__header">
+            <div class="about__rule-before"></div>
+            <img class="about__logo" src="images/BCFull.png" alt="BC Roads">
+            <div class="about__rule-after"></div>
+          </div>
+
+          <div class="about__content">
+            <p class="about__description">
+              <em>R.Mend</em> is a web app for keeping up with local road issues. If you would like to get this setup for your organization contact skills@barren.kyschools.us
+            </p>
+          </div>
+
+          <div class="about__mailing-list">
+            <!-- TODO: Talk to Mr. Browning about connecting sight to BCS Skills -->
+          </div>
+
+        </div>
+      </div>
+
+    <!-- Main footer container -->
+      <div class="footer">
+          <div class="footer__copyright">
+            <div class="footer__item">
+              <span class="footer__copyright-symbol">©</span> 2019
+              <a href="">Tanner York, All rights reserved.</a>
             </div>
           </div>
-          <div class="footer">
-              <div class="footer__copyright">
-                <div class="footer__item">
-                  <span class="footer__copyright-symbol">©</span> 2019
-                  <a href="">RMend.com</a>
-                </div>
-              </div>
 
-              <div class="footer__links">
-                <div class="footer__item footer__item--auto">
-                  <a href="">Contact</a>
-                </div>
-
-                <div class="footer__item">
-                  <a href="">Licensing</a>
-                </div>
-
-                <div class="footer__item">
-                  <a href="">Privacy</a>
-                </div>
-
-                <div class="footer__item">
-                  <a href="">Terms</a>
-                </div>
-              </div>
+          <div class="footer__links">
+            <div class="footer__item footer__item--auto">
+              <a href='mailto: skills@barren.kyschools.us'>Contact</a>
             </div>
 
-        </footer>
+            <div class="footer__item download-btn">
+              <a>Download</a>
+            </div>
 
-    <script type="module" src="scrips/app.js"></script>
+            <!-- <div class="footer__item">
+              <a>Privacy</a>
+            </div> -->
 
+            <!-- <div class="footer__item">
+              <a>Terms</a>
+            </div> -->
+          </div>
+        </div>
+    </footer>
+
+    <!-- Misc HTML Elements-->
+
+     <!-- Loading Overlay for getting/uploading firebase data -->
+     <div class="loading-overlay no-print">
+      <img id="loading-image" src="images/Spin-1s-80px.svg" alt="Loading..." />
+    </div>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator no-print" style="display: none">
+        <a href="" style="text-transform: uppercase"><strong>Offline</strong></a>
+    </div>
+
+    <div class="report-print js-report-print" style="display: none">
+      <div class="report-print row">
+        <figure class="report-print figure">
+          <img class="js-report-print__img" src=""/>
+        </figure>
+      </div>
+
+      <div class="report-print row">
+        <div class="report-print details">
+          <h4><span class="js-report-print__sender">Sender:</span></h4>
+          <p><span class="js-report-print__date">Date:</span></p>
+          <p><span class="js-report-print__road-name">Road Name:</span></p>
+          <p><span class="js-report-print__nearest-street">Nearest Street:</span></p>
+          <p><span class="js-report-print__MD">Magistrial District:</span></p>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" async src="scrips/bundle.js"></script>
+    <!-- Image Loading JS -->
+    <script src="JS-Load-Image/load-image.all.min.js"></script>
+    <script src="JS-Canvas-to-Blob/canvas-to-blob.min.js"></script>
   </body>
 </html>

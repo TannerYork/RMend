@@ -1,0 +1,21 @@
+{
+    "name": "RMend",
+    "description": "BC:Roads is a web app created for the Barren County Road Department so that they can have an easy way to keep track of their local communities road issues.",
+    "lang": "en-US",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "theme_color": "#F9FAFB",
+    "icons": [
+      {
+        "src": "/images/BC-Road-app-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      },
+      {
+        "src": "/images/BC-Road-app-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }
+    ],
+    "gcm_sender_id": "103953800507"
+  }

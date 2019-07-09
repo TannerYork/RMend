@@ -1,0 +1,97 @@
+.form-header {
+    text-align: center;
+    height: auto;
+    margin-bottom: 20px;}
+
+.form-row {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    flex-wrap: wrap;}
+    .form-row input[type="text"]::placeholder {
+        text-align: center;}
+    .form-row input[type="text"]:-ms-input-placeholder {
+        text-align: center;}
+    .form-row input[type="text"] {
+        border: 1px solid #D6D9DC;
+        border-radius: 3px;
+        width: 100%;
+        padding: 7px;
+        font-size: 14px;}
+    .form-row label {
+    margin-bottom: 15px;}
+    .form-row textarea {
+    font-family: "Helvetcia", "Arial", sans-serif;
+    font-size: 14px;
+
+    border: 1px soild #D55C5F;
+    border-radius: 3px;
+
+    min-height: 50px;
+    margin-bottom: 10px;
+    padding: 7px;
+    resize: none;}
+    .form-row input[type="file"] {
+    color: var(--main-link-color);}
+    .form-row button {
+    font-size: 16px;
+    font-weight: bold;
+
+    color: var(--style-color-ligh_blue);
+    background-color: var(--main-text-color);
+
+    border: none;
+    border-radius: 3px;
+
+    padding: 10px 40px;
+    cursor: pointer;}
+    .form-row button:hover {
+        background-color: rgb(173, 166, 166);}
+    .form-row button:active {
+        background-color: var(--main-link-color);}
+    .form-row-photo {
+        margin-bottom: 20px;}
+        .form-row .photo-label {
+            margin-bottom: 0;}
+.legacy-form-row {
+    border: none;
+    margin-bottom: 40px;
+    width: 100%;
+    max-width: 300px;
+    margin-right: 0px;}
+    .legacy-form-row legend {
+        margin-bottom: 15px;}
+    .legacy-form-row .radio-label {
+        display: block;
+        font-size: 14px;
+        padding: 0 20px 0 10px;}
+    .legacy-form-row input[type='radio'] {
+        margin-top: 2px;}
+    .legacy-form-row .radio-label,
+    .legacy-form-row input[type='radio'] {
+        float: left;}
+
+.settings-form {
+    height: 50%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;}
+
+@media only screen and (min-width: 500px) {
+    .verified-user-page {
+        display: flex;
+        align-items: center;
+    }
+
+    .issue-form {
+        width: 300px;
+    }
+}
+
+@media only screen and (min-width: 401px) and (max-width: 960px) {
+    .form-row .instructions {
+      margin-left: 0;}
+  }

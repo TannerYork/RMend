@@ -1,0 +1,282 @@
+.reports-list {
+    list-style-type: none;
+  
+    justify-content: center;
+    flex-wrap: wrap;
+  
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;}
+    .report-item {
+      background-color: #FFFFFF;
+      border-radius: 10px;
+  
+      width: 100%;
+      max-width: 500px;
+      height: 400px;
+      margin-bottom: 5px;
+      
+      position: relative;
+  
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;}
+      .report-item__figure {
+        width: 100%;
+        height: 300px;
+        border-radius: 3px;
+        
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        max-width: 500px;
+        max-height: 300px;}
+        .report-item__figure img {
+          background-color: #FFFFFF;
+          width: 100%;
+          height: 100%;
+          border-radius: 10px;
+          max-width: 500px;
+          max-height: 300px;
+          border-radius: 3px;
+          image-orientation: from-image;}
+      .report-item__data {
+        background-color: var(--style-color-ligh_blue);
+        text-align: center;
+  
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        max-width: 500px;
+        max-height: 300px;
+        border-radius: 3px;
+        overflow-y: scroll;
+        scroll-behavior: smooth;
+  
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;}
+        .report-item__data h4 {
+          text-align: start;
+          width: 100%;
+          display: block;}
+        .report-item__data p {
+          text-align: start;
+          width: 100%;
+          display: block;}
+        .report-item__data > * {
+          max-width: 300px;}
+        .report-item__data.visible {
+          flex: 1;}
+          .report-item__subheader {
+            color: rgb(233, 229, 229)
+          }
+      .report-item__button {
+        padding: 12px;
+        width: 5%;
+        max-width: 300px;
+        outline: none;
+        position: absolute;
+        cursor: pointer;}
+      /* .report-item__button:hover {
+        cursor: pointer;
+        background-color: rgb(70, 66, 66);} */
+      .report-item__button-delete {
+        background-image: url("../images/red-x.png");
+        background-size: 100%;
+        border: 0;
+        top: 2px;
+        left: 5%;}
+      .report-item__button-delete:hover {
+       opacity: 50%;}
+      .report-item__button-print {
+        background-image: url("../images/print-button.svg");
+        background-size: 100%;
+        border: 0;
+        top: 2px;
+        left: 15%;}
+        .report-item__button-print:hover {
+          opacity: 50%;}
+      /* The .report-item__button-prioritize */
+      .report-item__button-prioritize {
+        display: block;
+        position: absolute;
+        top: 2px;
+        left: 25%;
+        padding: 12px;
+        width: 5%;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* Hide the browser's default checkbox */
+      .report-item__button-prioritize input {
+        position: absolute;
+        top: 2px;
+        left: 25%;
+        opacity: 0;
+        cursor: pointer;
+        pointer-events: none;
+        height: 0;
+        width: 0;
+      }
+
+      /* Create a custom checkbox */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+      }
+
+      /* On mouse-over, add a grey background color */
+      .report-item__button-prioritize:hover input ~ .checkmark {
+        background-color: #ccc;
+      }
+
+      /* When the checkbox is checked, add a blue background */
+      .report-item__button-prioritize input:checked ~ .checkmark {
+        background-color: var(--main-link-color);
+        --color-holder: rgb(255, 195, 11);
+      }
+
+      /* Create the checkmark/indicator (hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+
+      /* Show the checkmark when checked */
+      .report-item__button-prioritize input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      /* Style the checkmark/indicator */
+      .report-item__button-prioritize .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+
+      .report-item__button-prioritize:hover {
+        opacity: 50%;
+      }
+
+      .priority-border {
+        border: 5px solid #FF6A30;
+      }
+  
+      .user-list__item-container {
+        width: 100%;
+        max-width: 400px;
+        margin-bottom: 10px;
+  
+        display: flex;
+        flex-direction: column;
+        align-items: unset;
+        min-height: 70px;
+        max-height: 110px;}
+      .users-list__item {
+        background-color: #FFFF;
+        color: var(--style-color-dar_blue);
+        text-align: center;
+        font-size: 6vw;
+      
+        width: 100%;
+        max-width: 500px;
+        height: 50px;
+        margin-bottom: 5px;
+      
+        display: flex;
+        flex-direction: column;
+        justify-content: center;}
+        .users-list__item h4 {
+          height: 50%;}
+        .users-list__item:hover {
+          cursor: pointer;}
+      .top {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        margin-bottom: 0px;
+        pointer-events: none;}
+      .bottom {
+        border-top: 1px solid #EAEDF0;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        margin-bottom: 0px;
+        height: 20px;
+        pointer-events: none;}
+      .options {
+        background-color: var(--main-background-color);
+        font-size: 20px;
+  
+        width: 100%;
+        max-width: 500px;
+        overflow: hidden;
+
+        display: none;
+        justify-content: center;
+        transition:flex 0.2s ease-out;
+        }
+        .options.visible {
+          display: flex;
+          cursor: default;}
+        .options-btn {
+          background-color: #D6D9DC;
+          color: var(--style-color-dar_blue);
+          flex-grow: 1;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;}
+          .options-btn:hover {
+            opacity: 50%;}
+          .options-btn.start {
+          border-right: 1px solid #FFFFFF;}
+          .options-btn.end {
+          border-left: 1px solid #FFFFFF;}
+          .options-btn:hover {
+            color: var(--main-link-visited-color);}
+
+@media only screen and (min-width: 500px) {
+    .report-item {
+        margin: 10px;}
+        /* .report-item__figure {
+          width: 300px;
+          height: 100%;
+          transform: rotate(90deg);}
+          .report-item__figure img {
+            width: 300px;
+            height: 100%;
+          } */
+        /* .report-item__data p {
+          width: 100%;
+        } */
+    
+      .users-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;}
+        .user-list__item-container { 
+          margin-right: 5px;}
+        .users-list__item {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          font-size: 40px;}
+}
