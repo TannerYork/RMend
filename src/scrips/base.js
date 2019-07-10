@@ -64,6 +64,7 @@ export default class Elements {
 
         // Furebase listeners for updating UI
         this.listeners = [],
+        this.userFormListeners = [],
 
         // Client App Elements and Variables
         this.deferredPrompt = null
@@ -261,6 +262,34 @@ export default class Elements {
         }
     }
 
+    async initilizeUserInfoForm(changeUserInfo, id) {
+        const userInfoForm = document.getElementById(id).querySelector('.user-info-page').querySelector('.user-info-form');
+
+        // If the report form elements initilized properly, listen for user to submit the report
+        if (userInfoForm) {
+            userInfoForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                this.toggleUserInfoPage(id);
+    
+                const email = document.getElementById(id).dataset.email;
+                const verificaton = document.getElementById(`${email}-verification`).value;
+                const magistrialDistrict = document.getElementById(`${email}-magistrial-district`).value;
+    
+                changeUserInfo(email, verificaton, magistrialDistrict)
+            });
+        }
+    }
+
+    toggleUserInfoPage(id) {
+        const userInfoPage = document.getElementById(id).querySelector('.user-info-page');
+        if (userInfoPage.style.display == 'none') {
+            userInfoPage.style.display = 'flex';
+        } else {
+            userInfoPage.style.display = 'none';
+        }
+     }
+
     // Clear report form data
     clearReportData() {
         this.reportImage.reset(),
@@ -334,7 +363,7 @@ export default class Elements {
 
     // Create a report list item to be displayed
     createModeratorReport(data, id) { return `
-            <div class="report-item js-report-item ${id}" data-id="${id}">
+            <div class="report-item js-report-item" id="${id}" data-id="${id}">
                 <figure class="report-item__figure">
                 <img class="report-item__img" src="${data.imageUrl || "images/Spin-1s-80px.svg"}"/>
                 </figure>
@@ -355,7 +384,7 @@ export default class Elements {
             </div>`};
 
     createVerifiedUserReport(data, id) { return `
-    <div class="report-item js-report-item ${id}" data-id="${id}">
+    <div class="report-item js-report-item" id="${id}" data-id="${id}">
         <figure class="report-item__figure">
         <img class="report-item__img" src="${data.imageUrl || "images/Spin-1s-80px.svg"}"/>
         </figure>
@@ -370,7 +399,7 @@ export default class Elements {
     </div>`};
 
     toggleBorder(id) {
-        document.querySelector(`.${id}`).classList.toggle("priority-border");
+        document.getElementById(id).classList.toggle("priority-border");
     }
 
     // Remove listeners for other list and setup users list listener to render user list items
@@ -394,17 +423,51 @@ export default class Elements {
     }
 
     // Create a user list item to be displayed
-    createUserCard(data) { return `
-        <div class="user-list__item-container js-users-list__item" data-email="${data.email}">
+    createUserCard(data, id) { return `
+        <div class="user-list__item-container js-users-list__item" id="${id}" data-email="${data.email}">
          <div class="users-list__item top js-users-list__item">
             <h4>${data.displayName}</h4>
          </div>
          <div class="options">
-            <div class="options-btn start js-moderate-btn">Moderate</div>
-            <div class="options-btn js-verify-btn">Verifiy</div>
-            <div class="options-btn end js-unverify-btn">Unverify</div>
-          </div>
+            <div class="options-btn js-edit-btn">Edit</div>
+         </div>
           <div class="users-list__item bottom"></div>
+
+          <div class="user-info-page" style="display: none">
+            <header class="form-header">
+                <h1>${data.displayName}</h1>
+                <p><em>${data.email}</em></p>
+            </header>
+            <form class="user-info-form" id="${data.email}-info-form">
+                <div class='form-row'>
+                    <label for='user-verification-status'>Verification Status</label>
+                    <select id="${data.email}-verification" name='${data.email}-verification'>
+                        <option value='moderator'>Moderator</option>
+                        <option value='verified'>Verified</option>
+                        <option value='unverified'>Unverified</option>
+                    </select>
+                </div>
+                <div class='form-row'>
+                    <label for='${data.email}-magistrial-district'>Verification Status</label>
+                    <select id="${data.email}-magistrial-district" name='${data.email}-magistrial-district'>
+                        <option value='district-manager'>District Manager</option>
+                        <option value ='moderator'>Moderator</option>
+                        <option value='1'>1</option>
+                        <option value='2'>2</option>
+                        <option value='3'>3</option>
+                        <option value='4'>4</option>
+                        <option value='5'>5</option>
+                        <option value='6'>6</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <button class="form-submit">Save</button>
+                </div>
+            </form>
+            <div class="form-row">
+                <button class="form-cancel">Cancel</button>
+            </div>
+          </div>
         </div>`;}
 
     // Remove listeners for other list and setup pending users list listener to render pending users list items
@@ -425,17 +488,50 @@ export default class Elements {
     }
 
     // Creaate a pending user list item to be displayed
-    createPenndingUserCard(data) { return `
-            <div class="user-list__item-container js-pendingUsers-list__item" data-email="${data.email}">
+    createPenndingUserCard(data, id) { return `
+            <div class="user-list__item-container js-pendingUsers-list__item" id="${id}" data-email="${data.email}">
                 <div class="users-list__item top js-pendingUsers-list__item" data-email="${data.email}">
                     <h4>${data.displayName}</h4>
                 </div>
                 <div class="options">
-                    <div class="options-btn start js-moderate-btn">Moderate</div>
-                    <div class="options-btn js-verify-btn">Verifiy</div>
-                    <div class="options-btn end js-unverify-btn">Unverify</div>
+                    <div class="options-btn js-edit-btn">Edit</div>
                 </div>
-                <div class="users-list__item bottom" data-email="${data.email}">
+                <div class="users-list__item bottom"></div>
+
+                <div class="user-info-page" style="display: none">
+                    <header class="form-header">
+                        <h1>${data.displayName}</h1>
+                        <p><em>${data.email}</em></p>
+                    </header>
+                    <form class="user-info-form" id="${data.email}-info-form">
+                        <div class='form-row'>
+                            <label for='user-verification-status'>Verification Status</label>
+                            <select id="${data.email}-verification" name='${data.email}-verification'>
+                                <option value='moderator'>Moderator</option>
+                                <option value='verified'>Verified</option>
+                                <option value='unverified'>Unverified</option>
+                            </select>
+                        </div>
+                        <div class='form-row'>
+                            <label for='${data.email}-magistrial-district'>Verification Status</label>
+                            <select id="${data.email}-magistrial-district" name='${data.email}-magistrial-district'>
+                                <option value='district-manager'>District Manager</option>
+                                <option value ='moderator'>Moderator</option>
+                                <option value='1'>1</option>
+                                <option value='2'>2</option>
+                                <option value='3'>3</option>
+                                <option value='4'>4</option>
+                                <option value='5'>5</option>
+                                <option value='6'>6</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <button class="form-submit js-settings-save">Save</button>
+                        </div>
+                    </form>
+                    <div class="form-row">
+                        <button class="form-cancel">Cancel</button>
+                    </div>
                 </div>
             </div>`};
 
@@ -453,7 +549,7 @@ export default class Elements {
             } else if (cardCreator == this.createVerifiedUserReport) {
                 this.reportsList.insertAdjacentHTML('beforeend', cardCreator(change.doc.data(), change.doc.id));
             } else {
-                this.reportsList.insertAdjacentHTML('beforeend', cardCreator(change.doc.data()));
+                this.reportsList.insertAdjacentHTML('beforeend', cardCreator(change.doc.data(), change.doc.id));
             }
         }
         if (change.type === "modified") {

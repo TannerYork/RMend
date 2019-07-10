@@ -70,37 +70,13 @@ export function getProfilePicUrl() {
 }
 
 // Moderate user from firebase functions
-export function grantModeratorRole(email) {
-  const addAdmin = firebase.functions().httpsCallable('addAdmin');
-  addAdmin({email: email}).then((results) => {
+export function updateUserInfo(email, verification, magistrialDistrict) {
+  const updateInfo = firebase.functions().httpsCallable('updateUserInfo');
+  updateInfo({email: email, verification: verification, magistrialDistrict: magistrialDistrict}).then((results) => {
     if (results && results.data.error !== undefined) {
       console.log(results.data);
     } else {
-      console.log(results.data.result);
-    }
-  });
-}
-
-// Validate user from firebase functions
-export async function validateUser(email) {
-  const addUser = await firebase.functions().httpsCallable('addUser');
-  await addUser({email: email}).then((results) => {
-    if (results && results.data && results.data.error) {
       console.log(results.data);
-    } else if(results && results.data && results.data.result) {
-      console.log(results.data.result);
-    }
-  });
-}
-
-// Unvalidate user from firebase functions
-export async function unvalidateUser(email) {
-  const removeUser = await firebase.functions().httpsCallable('removeUser');
-  await removeUser({email: email}).then((results) => {
-    if (results && results.data && results.data.error) {
-      console.log(results.data);
-    } else if(results && results.data && results.data.result) {
-      console.log(results.data.result);
     }
   });
 }

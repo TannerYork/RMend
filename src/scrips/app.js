@@ -68,15 +68,6 @@ if ('serviceWorker' in navigator) {
             }}
         elements.sidebar.addEventListener('click', checkForListChange);
 
-        // Checks for admin settings page interaction and submits changes if needed
-        function checkForSettingsInteraction(event) {
-            const input = event.target.closest('.js-notiffication-input');
-            if (input && input.value == true) {
-                
-            } 
-        }
-        elements.settingsPage.addEventListener('click', checkForSettingsInteraction);
-
         // Checks for admin list items interaction and acts as needed
         function checkForItemInteraction(event) {
             // If list item is a pending user, verify user
@@ -130,19 +121,15 @@ if ('serviceWorker' in navigator) {
         // Checks if user list item as user interaction and act as needed
         function checkForUserItemInteraction(event) {
             const target = event.target;
-            if (target.textContent == 'Moderate') {
-                 // If list item is a pending user, verify user
-                const email = target.parentElement.parentElement.dataset.email;
-                firestore.grantModeratorRole(email);
-            } else if (target.textContent == 'Verifiy') {
-                 // If list item is a user, unverify the user
-                const email = target.parentElement.parentElement.dataset.email;
-                firestore.validateUser(email);
-            } else if (target.textContent == 'Unverify') {
-                 // If list item is a reports delet button, remove the report from firebase
-                const email = target.parentElement.parentElement.dataset.email;
-                firestore.unvalidateUser(email);
-            }}
+            if (target.classList.contains('js-edit-btn')) {
+                const id = target.parentElement.parentElement.id;
+                elements.toggleUserInfoPage(id);
+                elements.initilizeUserInfoForm(firestore.updateUserInfo, id);
+            } else if (target.classList.contains('form-cancel')) {
+                const id = target.parentElement.parentElement.parentElement.id;
+                elements.toggleUserInfoPage(id);
+            }
+        }
         elements.reportsList.addEventListener('click', checkForUserItemInteraction);
        } else { 
            // Prompt User that they are offline and therfore can't perform firebase functions

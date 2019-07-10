@@ -74,38 +74,68 @@ function cleanupTokens(response, tokens) {
     return Promise.all(tokensDelete);
    }
 
-   exports.checkModeratorToken = functions.https.onCall((data, context) => {
-       if (context.auth.token.moderator == true) {
-        return {result: true};
-       } else {
-           return {result: false};
-       }
-});
-
  exports.savePedningUser = functions.auth.user().onCreate((user) => {
     return admin.firestore().collection('pendingUsers').doc(user.uid).set({
         displayName: user.displayName,
-        email: user.email
+        email: user.email,
+        magistrialDistrict: 0
     });
  });
 
 
-exports.addAdmin = functions.https.onCall((data, context) => {
+ exports.updateUserInfo = functions.https.onCall((data, context) => {
     if (context.auth.token.moderator !== true) {
-        return {error: "Request not authorized. User must be a moderator to fulfill request."};
+        return {error: "Request not authorized. You must be a moderator to fulfill this request."};
     }
-    const email = data.email;
-    return admin.auth().getUserByEmail(email).then((user) => {
+    return admin.auth().getUserByEmail(data.email).then((user) => {
+        if (data.verification && data.verification === "moderator") {
+            // Moderate User
+            return addModerator(user).then((results) => {
+                if (results.error) {
+                    return results.error;
+                } else {
+                    return results.result;
+                }
+            });
+        } else if (data.verification && data.verification === "verified") {
+            // Verify User
+            return addUser(user, data.magistrialDistrict).then((results) => {
+                if (results.error) {
+                    return results.error;
+                } else {
+                    return results.result;
+                }
+            });
+        } else if (data.verification && data.verification === "unverified") {
+            // Unverifiy User
+            return removeUser(user).then((results) => {
+                if (results.error) {
+                    return results.error;
+                } else {
+                    return results.result;
+                }
+            });
+        } else {
+            return {error: "ERROR. Verification data was not found"}; 
+        }
+    }).catch((err) => {
+        return {error: err.message, stack: err.stack};
+    });
+
+ });
+
+ function addModerator(user) {
     if (user.customClaims && user.customClaims.moderator === true) {
-        return {error: 'User is already a moderator.'};
+        return {error: `${user.displayName} is already a moderator`};
     }
     return admin.auth().setCustomUserClaims(user.uid, {verified: true, moderator: true, allowNotifications: false}).then(() => {
         return admin.firestore().collection('pendingUsers').doc(user.uid).delete().then(() => {
                 return  admin.firestore().collection('users').doc(user.uid).set({
                     displayName: user.displayName,
-                    email: user.email
+                    email: user.email,
+                    magistrialDistrict: 'moderator'
                 }).then(() => {
-                    return {result: `${user.displayName} was granted moderator privliages.`}
+                    return {result: `${user.displayName} has successfully become a moderator`}
                 }).catch((err) => {
                     return {error: err.message, stack: err.stack};
                 });
@@ -115,30 +145,20 @@ exports.addAdmin = functions.https.onCall((data, context) => {
         }).catch((err) => {
             return {error: err.message, stack: err.stack};
         });
-    }).catch((err) => {
-        return {error: err.message, stack: err.stack};
-    }); 
-});
+}
 
-exports.addUser = functions.https.onCall((data, context) => {
-    if (context.auth.token.moderator !== true) {
-        return {error: "Request not authorized. User must be a moderator to fulfill request."};
+function addUser(user, magistrial) {
+    if (user.customClaims && user.customClaims.verifyed === true) {
+        return {error: `${user.displayName} is already verified`};
     }
-    const email = data.email;
-    return admin.auth().getUserByEmail(email).then((user) => {
-        if (user.customClaims && user.customClaims.verified === true) {
-            return {error: 'User is already verified'};
-        }
-        return admin.auth().setCustomUserClaims(user.uid, {verified: true}).then(() => {
-            return admin.firestore().collection('pendingUsers').doc(user.uid).delete().then(() => {
-                 return admin.firestore().collection('users').doc(user.uid).set({
-                    displayName: user.displayName,
-                    email: user.email
-                }).then(() => {
-                    return{result: `Successfully verified ${user.displayName}`};
-                }).catch((err) => {
-                    return {error: err.message, stack: err.stack};
-                });
+    return admin.auth().setCustomUserClaims(user.uid, {verified: true}).then(() => {
+        return admin.firestore().collection('pendingUsers').doc(user.uid).delete().then(() => {
+                return admin.firestore().collection('users').doc(user.uid).set({
+                displayName: user.displayName,
+                email: user.email,
+                magistrialDistrict: magistrial
+            }).then(() => {
+                return{result: `${user.displayName} has succesfully become a verifed user`};
             }).catch((err) => {
                 return {error: err.message, stack: err.stack};
             });
@@ -148,24 +168,20 @@ exports.addUser = functions.https.onCall((data, context) => {
     }).catch((err) => {
         return {error: err.message, stack: err.stack};
     });
-});
+}
 
-exports.removeUser = functions.https.onCall((data, context) => {
-    if (context.auth.token.moderator !== true) {
-        return {error: "Request not authorized. User must be a moderator to fulfill request."};
-    }
-    const email = data.email;
-    return admin.auth().getUserByEmail(email).then((user) => {
+function removeUser(user) {
         if (user.customClaims && user.customClaims.verifyed === false) {
-            return {error: 'User is already unverified'};
+            return {error: `${user.displayName} is already unverified`};
         }
         return admin.auth().setCustomUserClaims(user.uid, { verified: false, moderator: false }).then(() => {
             return admin.firestore().collection('users').doc(user.uid).delete().then(() => {
                  return admin.firestore().collection('pendingUsers').doc(user.uid).set({
                     displayName: user.displayName,
-                    email: user.email
+                    email: user.email,
+                    magistrialDistrict: 0
                 }).then(() => {
-                    return{result: `Successfully unverified ${user.displayName}`};
+                    return{result: true};
                 }).catch((err) => {
                     return {error: err.message, stack: err.stack};
                 });
@@ -175,15 +191,9 @@ exports.removeUser = functions.https.onCall((data, context) => {
         }).catch((err) => {
             return {error: err.message, stack: err.stack};
         });
-    }).catch((err) => {
-        return {error: err.message, stack: err.stack};
-    });
-});
+}
 
 exports.saveDeviceToken = functions.https.onCall((data, context) => {
-    if (context.auth.token.moderator !== true) {
-        return {error: "You have to be a moderator save device tokens to firestore"};
-    }
     if (data && data.token) {
         admin.firestore().collection('fcmTokens').doc(data.token).set({
             id: context.auth.uid

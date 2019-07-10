@@ -236,6 +236,9 @@
         .options.visible {
           display: flex;
           cursor: default;}
+        .options-input {
+          width: 100%;
+          display: flex;}
         .options-btn {
           background-color: #D6D9DC;
           color: var(--style-color-dar_blue);
@@ -251,6 +254,25 @@
           border-left: 1px solid #FFFFFF;}
           .options-btn:hover {
             color: var(--main-link-visited-color);}
+
+      .user-info-page {
+        background-color: #D6D9DC;
+        color: #3A3A3A;
+
+        width: 400px;
+        height: 375px;
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: column;
+        position: absolute;}
+        .user-info-page .form-row {
+          margin-bottom: 20px;
+        }
+        .user-info-page .form-header {
+          margin-top: 5px;
+        }
+        
 
 @media only screen and (min-width: 500px) {
     .report-item {

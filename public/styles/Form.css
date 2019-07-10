@@ -19,6 +19,11 @@
         width: 100%;
         padding: 7px;
         font-size: 14px;}
+    .form-row select {
+        width: 100%;
+        padding: 5px;
+        font-size: 14px;
+        -webkit-appearance: none;}
     .form-row label {
     margin-bottom: 15px;}
     .form-row textarea {
