@@ -78,7 +78,7 @@ function cleanupTokens(response, tokens) {
     return admin.firestore().collection('pendingUsers').doc(user.uid).set({
         displayName: user.displayName,
         email: user.email,
-        magistrialDistrict: 0
+        magisterialDistrict: 0
     });
  });
 
@@ -99,7 +99,7 @@ function cleanupTokens(response, tokens) {
             });
         } else if (data.verification && data.verification === "verified") {
             // Verify User
-            return addUser(user, data.magistrialDistrict).then((results) => {
+            return addUser(user, data.magisterialDistrict).then((results) => {
                 if (results.error) {
                     return results.error;
                 } else {
@@ -133,7 +133,7 @@ function cleanupTokens(response, tokens) {
                 return  admin.firestore().collection('users').doc(user.uid).set({
                     displayName: user.displayName,
                     email: user.email,
-                    magistrialDistrict: 'moderator'
+                    magisterialDistrict: 'moderator'
                 }).then(() => {
                     return {result: `${user.displayName} has successfully become a moderator`}
                 }).catch((err) => {
@@ -147,7 +147,7 @@ function cleanupTokens(response, tokens) {
         });
 }
 
-function addUser(user, magistrial) {
+function addUser(user, magisterial) {
     if (user.customClaims && user.customClaims.verifyed === true) {
         return {error: `${user.displayName} is already verified`};
     }
@@ -156,7 +156,7 @@ function addUser(user, magistrial) {
                 return admin.firestore().collection('users').doc(user.uid).set({
                 displayName: user.displayName,
                 email: user.email,
-                magistrialDistrict: magistrial
+                magisterialDistrict: magisterial
             }).then(() => {
                 return{result: `${user.displayName} has succesfully become a verifed user`};
             }).catch((err) => {
@@ -179,7 +179,7 @@ function removeUser(user) {
                  return admin.firestore().collection('pendingUsers').doc(user.uid).set({
                     displayName: user.displayName,
                     email: user.email,
-                    magistrialDistrict: 0
+                    magisterialDistrict: 0
                 }).then(() => {
                     return{result: true};
                 }).catch((err) => {

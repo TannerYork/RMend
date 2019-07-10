@@ -70,9 +70,9 @@ export function getProfilePicUrl() {
 }
 
 // Moderate user from firebase functions
-export function updateUserInfo(email, verification, magistrialDistrict) {
+export function updateUserInfo(email, verification, magisterialDistrict) {
   const updateInfo = firebase.functions().httpsCallable('updateUserInfo');
-  updateInfo({email: email, verification: verification, magistrialDistrict: magistrialDistrict}).then((results) => {
+  updateInfo({email: email, verification: verification, magisterialDistrict: magisterialDistrict}).then((results) => {
     if (results && results.data.error !== undefined) {
       console.log(results.data);
     } else {
@@ -93,7 +93,7 @@ export async function saveReport(report) {
     roadName: report.roadName,
     details: report.details,
     nearestStreet: report.nearestStreet,
-    magistrialDistrict: report.magistrialDistrict,
+    magisterialDistrict: report.magisterialDistrict,
     priority: report.priority
     }).then((messageRef) => {
         // Upload the image to Cloud Storage

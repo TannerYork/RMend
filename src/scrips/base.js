@@ -46,7 +46,7 @@ export default class Elements {
             this.reportRoadName = document.querySelector('.js-issue-roadName');
             this.reportDetails = document.querySelector('.js-issue-details');
             this.reportNearestStreet = document.querySelector('.js-issue-nearestStreet');
-            this.reportMagistrialDistrict = document.querySelector('.js-issue-magistrialDistrict');
+            this.reportMagisterialDistrict = document.querySelector('.js-issue-magisterialDistrict');
             this.reportPriorityTrue = document.querySelector('.js-issue-priority-input-true');
             this.reportPriorityFalse = document.querySelector('.js-issue-priority-input-false');
 
@@ -57,7 +57,7 @@ export default class Elements {
             this.reportPrintPage = document.querySelector('.js-report-print');
             this.reportPrintImg = document.querySelector('.js-report-print__img');
             this.reportPrintSender = document.querySelector('.js-report-print__sender');
-            this.reportPrintMagistrialDistrict = document.querySelector('.js-report-print__MD');
+            this.reportPrintMagisterialDistrict = document.querySelector('.js-report-print__MD');
             this.reportPrintRoadName = document.querySelector('.js-report-print__road-name');
             this.reportPrintNearestStreet = document.querySelector('.js-report-print__nearest-street');
             this.reportPrintDate = document.querySelector('.js-report-print__date');
@@ -199,7 +199,7 @@ export default class Elements {
                                 data.roadName = document.querySelector('.js-issue-roadName').value;
                                 data.details = document.querySelector('.js-issue-details').value;
                                 data.nearestStreet = document.querySelector('.js-issue-nearestStreet').value;
-                                data.magistrialDistrict = document.querySelector('.js-issue-magistrialDistrict').value;
+                                data.magisterialDistrict = document.querySelector('.js-issue-magisterialDistrict').value;
 
                                 if (document.querySelector('.js-issue-priority-input-true').checked == true) {
                                     data.priority = true;
@@ -217,7 +217,7 @@ export default class Elements {
                                     document.querySelector('.js-issue-roadName').value = '';
                                     document.querySelector('.js-issue-details').value = '';
                                     document.querySelector('.js-issue-nearestStreet').value = '';
-                                    document.querySelector('.js-issue-magistrialDistrict').value = '';
+                                    document.querySelector('.js-issue-magisterialDistrict').value = '';
                                     const results = await reportUploadFunction(report)
                                     if (results && results.error) {
                                         document.querySelector('.loading-overlay').classList.toggle('loading-overlay__is-visible');
@@ -274,9 +274,9 @@ export default class Elements {
     
                 const email = document.getElementById(id).dataset.email;
                 const verificaton = document.getElementById(`${email}-verification`).value;
-                const magistrialDistrict = document.getElementById(`${email}-magistrial-district`).value;
+                const magisterialDistrict = document.getElementById(`${email}-magisterial-district`).value;
     
-                changeUserInfo(email, verificaton, magistrialDistrict)
+                changeUserInfo(email, verificaton, magisterialDistrict)
             });
         }
     }
@@ -296,7 +296,7 @@ export default class Elements {
         this.reportRoadName.value = '';
         this.reportDetails.value = '';
         this.reportNearestStreet.value = '';
-        this.reportMagistrialDistrict.value = '';
+        this.reportMagisterialDistrict.value = '';
     }
 
 /**
@@ -373,7 +373,7 @@ export default class Elements {
                 <p><span class= report-item__subheader>Road Name:</span> ${data.roadName}</p>
                 <p><span class= report-item__subheader>Description:</span> ${data.details}</p>
                 <p><span class= report-item__subheader>Nearest Street:</span> ${data.nearestStreet}</p>
-                <p><span class= report-item__subheader>Magistrial District:</span> ${data.magistrialDistrict}</p>
+                <p><span class= report-item__subheader>Magisterial District:</span> ${data.magisterialDistrict}</p>
                 </div>
                 <button class="report-item__button report-item__button-delete .js-report-item-delete" title="Delete"></button>
                 <button class="report-item__button report-item__button-print .js-report-item-print" title="Print"></button>
@@ -394,7 +394,7 @@ export default class Elements {
         <p><span class= report-item__subheader>Road Name:</span> ${data.roadName}</p>
         <p><span class= report-item__subheader>Description:</span> ${data.details}</p>
         <p><span class= report-item__subheader>Nearest Street:</span> ${data.nearestStreet}</p>
-        <p><span class= report-item__subheader>Magistrial District:</span> ${data.magistrialDistrict}</p>
+        <p><span class= report-item__subheader>Magisterial District:</span> ${data.magisterialDistrict}</p>
         </div>
     </div>`};
 
@@ -448,8 +448,8 @@ export default class Elements {
                     </select>
                 </div>
                 <div class='form-row'>
-                    <label for='${data.email}-magistrial-district'>Verification Status</label>
-                    <select id="${data.email}-magistrial-district" name='${data.email}-magistrial-district'>
+                    <label for='${data.email}-magisterial-district'>Magisterial District</label>
+                    <select id="${data.email}-magisterial-district" name='${data.email}-magisterial-district'>
                         <option value='district-manager'>District Manager</option>
                         <option value ='moderator'>Moderator</option>
                         <option value='1'>1</option>
@@ -513,8 +513,8 @@ export default class Elements {
                             </select>
                         </div>
                         <div class='form-row'>
-                            <label for='${data.email}-magistrial-district'>Verification Status</label>
-                            <select id="${data.email}-magistrial-district" name='${data.email}-magistrial-district'>
+                            <label for='${data.email}-magisterial-district'>Magisterial District</label>
+                            <select id="${data.email}-magisterial-district" name='${data.email}-magisterial-district'>
                                 <option value='district-manager'>District Manager</option>
                                 <option value ='moderator'>Moderator</option>
                                 <option value='1'>1</option>
@@ -618,14 +618,14 @@ export default class Elements {
 
         this.reportPrintImg.src = "";
         this.reportPrintSender.textContent = "";
-        this.reportPrintMagistrialDistrict.textContent = "";
+        this.reportPrintMagisterialDistrict.textContent = "";
         this.reportPrintRoadName.textContent = "";
         this.reportPrintNearestStreet.textContent = "";
         this.reportPrintDate.textContent = "";
 
         this.reportPrintImg.src = `${report.imageURL}`;
         this.reportPrintSender.textContent = `Sender: ${report.sender}`;
-        this.reportPrintMagistrialDistrict.textContent = `Magistrial District: ${report.magistrialDistrict}`;
+        this.reportPrintMagisterialDistrict.textContent = `Magisterial District: ${report.magisterialDistrict}`;
         this.reportPrintRoadName.textContent = `Road Name: ${report.roadName}`;
         this.reportPrintNearestStreet.textContent = `Nearest Street: ${report.nearestStreet}`;
         this.reportPrintDate.textContent = `Date: ${report.date}`;
