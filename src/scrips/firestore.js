@@ -19,17 +19,6 @@ export function signIn() {
   firebase.auth().signInWithRedirect(provider); 
 }
 
-export function isModerator() {
-  const checkModerator = firebase.functions().httpsCallable('checkModeratorToken');
-  return checkModerator({email: email}).then((results) => {
-    if (results && results.data.error !== undefined) {
-      console.log(results.data);
-    } else {
-      return results.data.result;
-    }
-  });
-}
-
 export function setupAuthUi() {
         var ui = new firebaseui.auth.AuthUI(firebase.auth());
         var uiConfig = {

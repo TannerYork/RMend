@@ -73,6 +73,7 @@
             color: rgb(233, 229, 229)
           }
       .report-item__button {
+        background-color: rgb(225,225,225,0);
         padding: 12px;
         width: 5%;
         max-width: 300px;
@@ -80,7 +81,7 @@
         position: absolute;
         cursor: pointer;}
       .report-item__button-delete {
-        background-image: url("../images/red-x.png");
+        background-image: url("../images/iconmonstr-x-mark-1-240.png");
         background-size: 100%;
         border: 0;
         top: 2px;
@@ -90,6 +91,7 @@
       .report-item__button-print {
         background-image: url("../images/print-button.svg");
         background-size: 100%;
+        background-color: #FFFFFF;
         border: 0;
         top: 2px;
         left: 15%;}

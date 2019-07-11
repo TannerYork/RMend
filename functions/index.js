@@ -90,31 +90,13 @@ function cleanupTokens(response, tokens) {
     return admin.auth().getUserByEmail(data.email).then((user) => {
         if (data.verification && data.verification === "moderator") {
             // Moderate User
-            return addModerator(user).then((results) => {
-                if (results.error) {
-                    return results.error;
-                } else {
-                    return results.result;
-                }
-            });
+            return addModerator(user);
         } else if (data.verification && data.verification === "verified") {
             // Verify User
-            return addUser(user, data.magisterialDistrict).then((results) => {
-                if (results.error) {
-                    return results.error;
-                } else {
-                    return results.result;
-                }
-            });
+            return addUser(user, data.magisterialDistrict);
         } else if (data.verification && data.verification === "unverified") {
             // Unverifiy User
-            return removeUser(user).then((results) => {
-                if (results.error) {
-                    return results.error;
-                } else {
-                    return results.result;
-                }
-            });
+            return removeUser(user);
         } else {
             return {error: "ERROR. Verification data was not found"}; 
         }
@@ -128,7 +110,7 @@ function cleanupTokens(response, tokens) {
     if (user.customClaims && user.customClaims.moderator === true) {
         return {error: `${user.displayName} is already a moderator`};
     }
-    return admin.auth().setCustomUserClaims(user.uid, {verified: true, moderator: true, allowNotifications: false}).then(() => {
+    return admin.auth().setCustomUserClaims(user.uid, {verified: true, moderator: true, magisterialDistrict: 'moderator', allowNotifications: false}).then(() => {
         return admin.firestore().collection('pendingUsers').doc(user.uid).delete().then(() => {
                 return  admin.firestore().collection('users').doc(user.uid).set({
                     displayName: user.displayName,
@@ -151,7 +133,7 @@ function addUser(user, magisterial) {
     if (user.customClaims && user.customClaims.verifyed === true) {
         return {error: `${user.displayName} is already verified`};
     }
-    return admin.auth().setCustomUserClaims(user.uid, {verified: true}).then(() => {
+    return admin.auth().setCustomUserClaims(user.uid, {verified: true, moderator: false, magisterialDistrict: magisterial}).then(() => {
         return admin.firestore().collection('pendingUsers').doc(user.uid).delete().then(() => {
                 return admin.firestore().collection('users').doc(user.uid).set({
                 displayName: user.displayName,
@@ -174,7 +156,7 @@ function removeUser(user) {
         if (user.customClaims && user.customClaims.verifyed === false) {
             return {error: `${user.displayName} is already unverified`};
         }
-        return admin.auth().setCustomUserClaims(user.uid, { verified: false, moderator: false }).then(() => {
+        return admin.auth().setCustomUserClaims(user.uid, { verified: false, moderator: false, magisterialDistrict: 0}).then(() => {
             return admin.firestore().collection('users').doc(user.uid).delete().then(() => {
                  return admin.firestore().collection('pendingUsers').doc(user.uid).set({
                     displayName: user.displayName,

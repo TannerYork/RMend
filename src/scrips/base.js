@@ -350,15 +350,32 @@ export default class Elements {
         this.reportsList.innerHTML = '';
 
         await this.listeners.forEach((listener) => listener());
-        const listener = await firebase.firestore().collection("reports")
-            .onSnapshot(async (snapshot) => {
-                var numberOfReports = 0;
-                await snapshot.docChanges().forEach(async (change) => {
-                    numberOfReports += 1;
-                    await this.checkChangeType(change, this.createVerifiedUserReport, numberOfReports);
-                });
-            }, (error) => { console.log(error); });
-        this.listeners.push(listener);
+        const userIDToken = await firebase.auth().currentUser.getIdTokenResult(true);
+        const magisterialDistrict = userIDToken.claims.magisterialDistrict;
+        console.log(magisterialDistrict);
+
+        if (magisterialDistrict == 'manager') {
+            const listener = await firebase.firestore().collection("reports")
+                .onSnapshot(async (snapshot) => {
+                    var numberOfReports = 0;
+                    await snapshot.docChanges().forEach(async (change) => {
+                        numberOfReports += 1;
+                        await this.checkChangeType(change, this.createVerifiedUserReport, numberOfReports);
+                    });
+                }, (error) => { console.log(error); });
+            this.listeners.push(listener);
+        } else {
+            const listener = await firebase.firestore().collection("reports")
+                .where("magisterialDistrict", "==", magisterialDistrict)
+                .onSnapshot(async (snapshot) => {
+                    var numberOfReports = 0;
+                    await snapshot.docChanges().forEach(async (change) => {
+                        numberOfReports += 1;
+                        await this.checkChangeType(change, this.createVerifiedUserReport, numberOfReports);
+                    });
+                }, (error) => { console.log(error); });
+            this.listeners.push(listener);
+        }
     }
 
     // Create a report list item to be displayed
@@ -450,8 +467,7 @@ export default class Elements {
                 <div class='form-row'>
                     <label for='${data.email}-magisterial-district'>Magisterial District</label>
                     <select id="${data.email}-magisterial-district" name='${data.email}-magisterial-district'>
-                        <option value='district-manager'>District Manager</option>
-                        <option value ='moderator'>Moderator</option>
+                        <option value='manager'>District Manager</option>
                         <option value='1'>1</option>
                         <option value='2'>2</option>
                         <option value='3'>3</option>
@@ -515,8 +531,7 @@ export default class Elements {
                         <div class='form-row'>
                             <label for='${data.email}-magisterial-district'>Magisterial District</label>
                             <select id="${data.email}-magisterial-district" name='${data.email}-magisterial-district'>
-                                <option value='district-manager'>District Manager</option>
-                                <option value ='moderator'>Moderator</option>
+                                <option value='manager'>District Manager</option>
                                 <option value='1'>1</option>
                                 <option value='2'>2</option>
                                 <option value='3'>3</option>

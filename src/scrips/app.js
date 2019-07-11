@@ -47,10 +47,8 @@ if ('serviceWorker' in navigator) {
             if (btn && btn.textContent == 'View Reports') {
                 const userIDToken = await firebase.auth().currentUser.getIdTokenResult(true);
                 if (userIDToken.claims && userIDToken.claims.moderator == true) {
-                    console.log("moderator");
                     elements.renderModeratorReportsList();
                 } else {
-                    console.log("Verified User");
                     elements.renderVerifiedUserReportsList();
                 }
             } else if (btn && btn.textContent == 'Users') { 
